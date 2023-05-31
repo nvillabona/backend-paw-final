@@ -35,6 +35,10 @@ const postSchema = new Schema({
         ref: 'users',
         required: true,
     },
+    creator:{
+        type: String,
+        required: true,
+    },
     comments: [commentSchema],
     createdAt: {
         type: Date,

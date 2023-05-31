@@ -1,11 +1,12 @@
 const express = require('express');
 const { validationResult } = require('express-validator');
 const Post = require('../models/post');
+const User = require('../models/user');
 
 // Get all posts
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().sort({ createdAt: -1 });
         res.status(200).json({
             ok: true,
             posts,
@@ -21,6 +22,7 @@ const getAllPosts = async (req, res) => {
 
 // Create a new post
 const createPost = async (req, res) => {
+    const user = await User.findById(req.body.user)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -30,11 +32,12 @@ const createPost = async (req, res) => {
     }
 
     try {
-        const post = new Post(req.body) ;
+        const post = new Post({...req.body, creator: user.username}) ;
 
         await post.save();
         res.status(200).json({
             ok: true,
+            message: "Post saved successfully",
             post,
         });
     } catch (error) {

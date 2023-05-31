@@ -19,12 +19,14 @@ const createUser = async (req, res) => {
         await user.save();
         res.status(200).json({
             ok: true,
+            message: 'User saved successfully',
             user
         })
     } catch (error) {
         console.log(error)
         res.status(500).json({
             ok: false,
+            message: "Email or username already in use",
             error,
         })
     }
@@ -92,9 +94,12 @@ const userLogin = async (req, res ) => {
     }
 
     const token = await( generateJWT(req.body.userId, req.body.username))
+    let user = await User.findOne({ email: email})
     res.json({
         ok: true,
-        token
+        token,
+        user: user.id,
+        userName: user.username,
     })
 }
 
