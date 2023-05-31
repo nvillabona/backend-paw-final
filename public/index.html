@@ -49,6 +49,7 @@
         #messages {
             list-style-type: none;
             margin: 0;
+            width: 80vw;
             padding: 0;
         }
 
@@ -59,44 +60,25 @@
         #messages>li:nth-child(odd) {
             background: #efefef;
         }
+        .chat-wrapper{
+            display: flex;
+        }
     </style>
 </head>
 
 <body>
-    <ul id="messages"></ul>
+    <div class="chat-wrapper">
+        <ul id="messages"></ul>
+        <div>
+            <h4>Active users:</h4>
+            <ul id="users-list"></ul>
+        </div>
+    </div>
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
-
-        var messages = document.getElementById("messages");
-        var form = document.getElementById("form");
-        var input = document.getElementById("input");
-
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            if (input.value) {
-                socket.emit("chat message", input.value);
-                input.value = "";
-            }
-        });
-        // Load chat history
-        socket.on("chat history", function (history) {
-            history.forEach(function (msg) {
-                var item = document.createElement("li");
-                item.textContent = msg.content;
-                messages.appendChild(item);
-            });
-            window.scrollTo(0, document.body.scrollHeight);
-        });
-        socket.on("chat message", function (msg) {
-            var item = document.createElement("li");
-            item.textContent = msg;
-            messages.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
-        });
+    <script type="text/javascript" src="chat.js">
     </script>
 </body>
 
